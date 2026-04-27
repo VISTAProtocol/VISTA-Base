@@ -50,7 +50,7 @@ interface IVistaReceipt {
 }
 
 /// @title VistaStream
-/// @notice Core payment engine — called by Oracle every 10 seconds when attention is verified
+/// @notice Core payment engine — called by Oracle every 5 seconds when attention is verified
 contract VistaStream is Ownable {
     struct Session {
         bytes32 sessionId;

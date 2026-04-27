@@ -2,7 +2,7 @@ import { createPublicClient, createWalletClient, http } from "viem";
 import { baseSepolia } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 
-const required = ["ORACLE_PRIVATE_KEY", "RPC_URL", "ORACLE_SECRET"];
+const required = ["ORACLE_PRIVATE_KEY", "RPC_URL"];
 for (const key of required) {
   if (!process.env[key]) throw new Error(`Missing required env var: ${key}`);
 }
@@ -71,12 +71,9 @@ export const VISTA_STREAM_ABI = [
 let deployments: { VistaStream: string; VistaEscrow: string };
 try {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  deployments = require("../deployments.json");
+  deployments = require("../../Smart-Contract/deployments.json");
 } catch {
-  throw new Error(
-    "deployments.json not found. Copy it from vista-contracts/ after deploying:\n" +
-      "  cp ../vista-contracts/deployments.json ./deployments.json",
-  );
+  throw new Error("Smart-Contract/deployments.json not found.");
 }
 
 export const VISTA_STREAM_ADDRESS = deployments.VistaStream as `0x${string}`;

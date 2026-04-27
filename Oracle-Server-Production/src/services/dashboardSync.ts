@@ -4,6 +4,22 @@ import type { TickResult, SessionState } from '../types';
 const DASHBOARD_API_URL = process.env.DASHBOARD_API_URL ?? '';
 const DASHBOARD_API_SECRET = process.env.DASHBOARD_API_SECRET ?? '';
 
+export async function verifyApiKey(apiKey: string): Promise<boolean> {
+  if (!DASHBOARD_API_URL) return true; // If no dashboard configured, skip validation
+  try {
+    const res = await fetch(`${DASHBOARD_API_URL}/api/publishers/verify-apikey?apiKey=${encodeURIComponent(apiKey)}`, {
+      method: 'GET',
+      headers: {
+        'x-oracle-secret': DASHBOARD_API_SECRET,
+      },
+    });
+    return res.ok;
+  } catch (err) {
+    console.error('[verifyApiKey] dashboard sync failed', err);
+    return false;
+  }
+}
+
 export function syncSession(session: SessionState): void {
   if (!DASHBOARD_API_URL) return;
   fetch(`${DASHBOARD_API_URL}/api/sessions`, {
@@ -28,6 +44,8 @@ export function syncSession(session: SessionState): void {
 
 export async function syncTick(tick: TickResult, session: SessionState): Promise<void> {
   if (!DASHBOARD_API_URL) return;
+  // Skip sync if effectiveSeconds rounded to 0 (flagged session with 1 pending second × 0.5 multiplier)
+  if (tick.secondsElapsed <= 0) return;
   try {
     const res = await fetch(`${DASHBOARD_API_URL}/api/ticks`, {
       method: 'POST',
