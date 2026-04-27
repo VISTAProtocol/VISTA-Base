@@ -71,9 +71,12 @@ export const VISTA_STREAM_ABI = [
 let deployments: { VistaStream: string; VistaEscrow: string };
 try {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  deployments = require("../../Smart-Contract/deployments.json");
+  deployments = require("../deployments.json");
 } catch {
-  throw new Error("Smart-Contract/deployments.json not found.");
+  throw new Error(
+    "deployments.json not found. Copy it from vista-contracts/ after deploying:\n" +
+      "  cp ../vista-contracts/deployments.json ./deployments.json",
+  );
 }
 
 export const VISTA_STREAM_ADDRESS = deployments.VistaStream as `0x${string}`;
