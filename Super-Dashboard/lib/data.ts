@@ -528,6 +528,29 @@ async function selectReceipts(userWallet?: string) {
   );
 }
 
+async function countReceiptsByCampaignIds(campaignIds: string[]) {
+  if (!campaignIds.length) {
+    return 0;
+  }
+
+  const supabase = createServerSupabaseClient();
+
+  if (!supabase) {
+    throw new Error("Supabase client is not configured");
+  }
+
+  const { count, error } = await supabase
+    .from("receipts")
+    .select("id", { count: "exact", head: true })
+    .in("campaign_id_onchain", campaignIds);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return count ?? 0;
+}
+
 export async function getRegistrationStatus(
   role: RoleName,
   wallet: string,
@@ -731,9 +754,16 @@ export async function getAdvertiserDashboard(
   wallet: string,
 ): Promise<AdvertiserDashboardData> {
   const campaigns = await selectCampaignsByWallet(wallet);
-  const sessions = await selectSessions({
-    campaignIds: campaigns.map((campaign) => campaign.campaign_id_onchain),
-  });
+  const campaignIds = campaigns.map((campaign) => campaign.campaign_id_onchain);
+  const [sessions, totalReceipts] = await Promise.all([
+    selectSessions({ campaignIds }),
+    countReceiptsByCampaignIds(campaignIds),
+  ]);
+
+  const averageConversionRate =
+    sessions.length === 0
+      ? 0
+      : Number(((totalReceipts / sessions.length) * 100).toFixed(2));
 
   const stats = {
     activeCampaigns: campaigns.filter((campaign) => campaign.active).length,
@@ -743,7 +773,7 @@ export async function getAdvertiserDashboard(
     totalVerifiedViewerSeconds: sumNumbers(
       sessions.map((session) => session.seconds_verified),
     ),
-    averageConversionRate: 23.4,
+    averageConversionRate,
   };
 
   return {
