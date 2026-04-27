@@ -41,13 +41,8 @@ import {
   preferenceOptions,
 } from "@/lib/constants";
 import type { CampaignRecord, PreferenceOption } from "@/lib/types";
-import {
-  buildMonadExplorerUrl,
-  bytes32FromSeed,
-  cn,
-  formatUsdc,
-} from "@/lib/utils";
-import { celoMainnet, wagmiConfig } from "@/lib/wagmi";
+import { buildExplorerUrl, bytes32FromSeed, cn, formatUsdc } from "@/lib/utils";
+import { baseSepoliaNetwork, wagmiConfig } from "@/lib/wagmi";
 
 const VISTA_RATE = 0.000072; // USDC per viewer per second (fixed by VISTA Protocol)
 
@@ -354,8 +349,8 @@ export default function NewCampaignPage() {
         throw new Error("Ad duration must be greater than zero.");
       }
 
-      if (chainId !== celoMainnet.id) {
-        await switchChainAsync({ chainId: celoMainnet.id });
+      if (chainId !== baseSepoliaNetwork.id) {
+        await switchChainAsync({ chainId: baseSepoliaNetwork.id });
       }
 
       const campaignIdOnchain = bytes32FromSeed(`${title}-${Date.now()}`);
@@ -373,7 +368,7 @@ export default function NewCampaignPage() {
           address: contractAddresses.mockUsdc,
           functionName: "approve",
           args: [contractAddresses.vistaEscrow, amount],
-          chainId: celoMainnet.id,
+          chainId: baseSepoliaNetwork.id,
         });
 
         await waitForTransactionReceipt(wagmiConfig, { hash: approvalHash });
@@ -390,7 +385,7 @@ export default function NewCampaignPage() {
             ratePerSecondOnchain,
             BigInt(duration),
           ],
-          chainId: celoMainnet.id,
+          chainId: baseSepoliaNetwork.id,
         });
 
         await waitForTransactionReceipt(wagmiConfig, { hash: txHash });
@@ -921,7 +916,7 @@ export default function NewCampaignPage() {
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <p>1. Generate a deterministic bytes32 campaign ID.</p>
               <p>2. Approve mUSDC spend to the VistaEscrow contract.</p>
-              <p>3. Deposit budget on Celo.</p>
+              <p>3. Deposit budget on Base Sepolia.</p>
               <p>4. Persist campaign metadata in Supabase.</p>
               <p>5. Show transaction hash with explorer link.</p>
             </CardContent>
@@ -940,7 +935,7 @@ export default function NewCampaignPage() {
                   <p className="text-muted-foreground">Transaction hash</p>
                   <Link
                     className="font-medium text-primary underline-offset-4 hover:underline break-all"
-                    href={buildMonadExplorerUrl("tx", launchResult.txHash)}
+                    href={buildExplorerUrl("tx", launchResult.txHash)}
                     target="_blank"
                   >
                     {launchResult.txHash}
@@ -958,10 +953,10 @@ export default function NewCampaignPage() {
                       size: "sm",
                       variant: "outline",
                     })}
-                    href={buildMonadExplorerUrl("tx", launchResult.txHash)}
+                    href={buildExplorerUrl("tx", launchResult.txHash)}
                     target="_blank"
                   >
-                    View on Celo Explorer
+                    View on Base Sepolia Explorer
                   </Link>
                 </div>
               </CardContent>

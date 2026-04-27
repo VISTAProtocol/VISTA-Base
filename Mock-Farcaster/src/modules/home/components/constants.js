@@ -202,7 +202,7 @@ export const CHANNELS = [
   "/home",
   "/builders",
   "/design",
-  "/monad",
+  "/base-sepolia",
   "/bcc",
   "/web3",
 ];

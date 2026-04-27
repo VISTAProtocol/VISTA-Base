@@ -6,7 +6,7 @@ import VistaEarningsPanel from "@/modules/vista/VistaEarningsPanel";
 import VistaOnboardingCard from "@/modules/vista/components/VistaOnboardingCard";
 import { useMemo } from "react";
 import { useBalance } from "wagmi";
-import { BASE_CHAIN_ID } from "@/lib/auth/monad-chain";
+import { BASE_CHAIN_ID } from "@/lib/auth/base-sepolia-chain";
 
 export default function TrendingSection({ channels, links, currentUser }) {
   const walletAddress = currentUser?.address;

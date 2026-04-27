@@ -31,7 +31,7 @@ import type {
 } from "@/lib/types";
 import {
   average,
-  buildMonadExplorerUrl,
+  buildExplorerUrl,
   buildVistaPublisherApiKey,
   dayKey,
   formatDateShort,
@@ -453,7 +453,9 @@ async function selectUsersByWallets(wallets: string[]): Promise<UserRecord[]> {
   }));
 }
 
-function buildAudienceAnalytics(users: UserRecord[]): CampaignAudienceAnalytics {
+function buildAudienceAnalytics(
+  users: UserRecord[],
+): CampaignAudienceAnalytics {
   const prefCounts = new Map<string, number>();
   for (const user of users) {
     for (const pref of user.preferences ?? []) {
@@ -1317,7 +1319,7 @@ export async function getUserHistory(wallet: string): Promise<UserHistoryData> {
         earned: matchingReceipt?.usdc_paid ?? session.total_paid_usdc / 2,
         campaignTitle: matchingCampaign?.title ?? "Unknown campaign",
         receiptUrl: matchingReceipt
-          ? buildMonadExplorerUrl("token", matchingReceipt.token_id)
+          ? buildExplorerUrl("token", matchingReceipt.token_id)
           : null,
       };
     }),
@@ -1327,7 +1329,7 @@ export async function getUserHistory(wallet: string): Promise<UserHistoryData> {
       usdcEarned: receipt.usdc_paid,
       secondsVerified: receipt.seconds_verified,
       mintedAt: receipt.minted_at,
-      explorerUrl: buildMonadExplorerUrl("token", receipt.token_id),
+      explorerUrl: buildExplorerUrl("token", receipt.token_id),
     })),
   };
 }

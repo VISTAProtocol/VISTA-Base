@@ -100,7 +100,7 @@ const roleCards: Record<
     bullets: [
       "Connect wallet → watch → earn. That's the whole flow",
       "Attention verified by oracle, not just click fraud",
-      "See every dollar, every second, on Celo",
+      "See every dollar, every second, on Base Sepolia",
     ],
     cta: "Enter as User",
   },
@@ -253,7 +253,7 @@ export default function HomePage() {
         <section className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="overflow-hidden rounded-[32px] border border-border/70 bg-card/90 p-8 shadow-sm shadow-black/5 sm:p-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.26em] text-primary">
-              Live on Celo · Attention streaming
+              Live on Base Sepolia · Attention streaming
             </div>
             <div className="mt-6 space-y-6">
               <div className="space-y-4">
@@ -404,9 +404,9 @@ export default function HomePage() {
                   Advertiser deposits
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Fund a campaign with mUSDC on Celo. Set your CPSv rate — cost
-                  per verified second. Budget only drains when attention is
-                  provably real.
+                  Fund a campaign with mUSDC on Base Sepolia. Set your CPSv rate
+                  — cost per verified second. Budget only drains when attention
+                  is provably real.
                 </p>
               </CardContent>
             </Card>
@@ -560,7 +560,7 @@ export default function HomePage() {
             </p>
             <div className="mt-5 space-y-2 text-sm">
               <p>
-                <span className="font-semibold">Celo</span>{" "}
+                <span className="font-semibold">Base Sepolia</span>{" "}
                 <span className="text-muted-foreground">
                   EVM-compatible, mobile-first blockchain
                 </span>
@@ -663,7 +663,7 @@ export default function HomePage() {
               </span>
               <span className="hidden opacity-40 sm:inline">·</span>
               <span className="text-xs opacity-70">
-                Celo · Not financial advice · Open source
+                Base Sepolia · Not financial advice · Open source
               </span>
             </div>
           </div>

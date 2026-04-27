@@ -14,13 +14,11 @@ metadata_hash = "none"
 use_literal_content = true
 
 [rpc_endpoints]
-celo_sepolia = "https://forno.celo-sepolia.celo-testnet.org"
 base_sepolia = "https://sepolia.base.org"
 
 [etherscan]
-monad_testnet = { key = "placeholder" }
-celo_sepolia = { key = "placeholder", chain = 11142220 }
 base_sepolia = { key = "placeholder", chain = 84532 }
+
 
 #  https://forno.celo-sepolia.celo-testnet.org : 
 # 23950543

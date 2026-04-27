@@ -93,9 +93,9 @@ declare class Vista {
 }
 declare const vista: Vista;
 
-declare const BASE_CHAIN_ID = 10143;
-declare const BASE_RPC_URL = "https://testnet-rpc.monad.xyz";
-declare const BASE_EXPLORER_URL = "https://testnet.monadexplorer.com";
+declare const BASE_CHAIN_ID = 84532;
+declare const BASE_RPC_URL = "https://sepolia.base.org";
+declare const BASE_EXPLORER_URL = "https://sepolia.basescan.org";
 interface WalletAuthMessageParams {
   domain: string;
   uri: string;

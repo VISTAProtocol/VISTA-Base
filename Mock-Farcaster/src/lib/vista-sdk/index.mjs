@@ -705,13 +705,13 @@ var k = class {
     }
   },
   H = new k();
-var L = 10143,
-  O = "https://testnet-rpc.monad.xyz",
-  N = "https://testnet.monadexplorer.com";
+var L = 84532,
+  O = "https://sepolia.base.org",
+  N = "https://sepolia.basescan.org";
 function T(w) {
   let { domain: t, uri: e, address: o, nonce: n, chainId: r, issuedAt: v } = w;
   return [
-    "Sign in to Farcaster Monad App",
+    "Sign in to Farcaster Base Sepolia App",
     `Domain: ${t}`,
     `URI: ${e}`,
     `Address: ${o}`,
@@ -726,7 +726,7 @@ async function F(w) {
   let {
       address: t,
       chainId: e,
-      targetChainId: o = 10143,
+      targetChainId: o = 84532,
       domain: n,
       uri: r,
       nonceEndpoint: v,

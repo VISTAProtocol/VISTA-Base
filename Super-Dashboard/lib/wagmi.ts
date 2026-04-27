@@ -12,7 +12,7 @@ const PROJECT_ID =
 const RPC_URL = process.env.NEXT_PUBLIC_BASE_RPC || BASE_MAINNET.rpcUrl;
 
 export const baseNetwork = baseSepolia;
-export const celoMainnet = baseNetwork;
+export const baseSepoliaNetwork = baseNetwork;
 
 export const wagmiConfig = createConfig({
   chains: [baseNetwork],

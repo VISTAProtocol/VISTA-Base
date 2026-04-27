@@ -14,7 +14,7 @@ export const BASE_CHAIN_ID = parseChainId(
   process.env.NEXT_PUBLIC_BASE_CHAIN_ID,
 );
 
-export const monadChain = defineChain({
+export const baseSepoliaChain = defineChain({
   id: BASE_CHAIN_ID,
   name: "Base Sepolia",
   nativeCurrency: {

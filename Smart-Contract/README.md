@@ -1,6 +1,6 @@
 # VISTA Protocol — Smart Contract & SDK
 
-This repository contains the core Solidity smart contracts and the JavaScript/TypeScript SDK for the VISTA Protocol on Monad.
+This repository contains the core Solidity smart contracts and the JavaScript/TypeScript SDK for the VISTA Protocol on Base.
 
 ---
 
@@ -56,25 +56,30 @@ VISTA provides a native onboarding modal to capture user profile data (age, loca
 ```typescript
 Vista.showOnboardingModal({
   wallet: "0xUSER...",
-  dashboardUrl: "http://localhost:3031" // optional, defaults to localhost:3031
+  dashboardUrl: "http://localhost:3031", // optional, defaults to localhost:3031
 });
 ```
 
 ### API Reference
 
 #### `Vista.init(config: VistaConfig): void`
+
 Initializes the SDK. Must be called before `attachZone()`.
 
 #### `Vista.attachZone(elementId: string): void`
+
 Begins collecting signals for the given element.
 
 #### `Vista.showOnboardingModal(params: OnboardingParams): void`
+
 Displays the profile registration modal.
 
 #### `Vista.detachZone(): void`
+
 Stops the heartbeat loop.
 
 #### `Vista.onEarn(callback: (data: EarnCallbackData) => void): void`
+
 Registers a callback for attention ticks.
 
 ---
@@ -86,24 +91,29 @@ Registers a callback for attention ticks.
 ### Usage
 
 #### Build
+
 ```shell
 $ forge build
 ```
 
 #### Test
+
 ```shell
 $ forge test
 ```
 
 #### Deploy
+
 ```shell
 $ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
 ```
 
 ### Documentation
+
 https://book.getfoundry.sh/
 
 ---
 
 ## License
+
 MIT
