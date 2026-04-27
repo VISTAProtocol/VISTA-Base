@@ -2,7 +2,7 @@ import { createPublicClient, createWalletClient, http } from "viem";
 import { baseSepolia } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 
-const required = ["ORACLE_PRIVATE_KEY", "RPC_URL", "ORACLE_SECRET"];
+const required = ["ORACLE_PRIVATE_KEY", "RPC_URL"];
 for (const key of required) {
   if (!process.env[key]) throw new Error(`Missing required env var: ${key}`);
 }

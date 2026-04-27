@@ -987,6 +987,7 @@ export async function recordTick(payload: OracleTickPayload) {
 
   // Deduplicate: Oracle and Ponder both call this endpoint for the same on-chain tick.
   // Return early if a tick for this session already exists within a 30-second window.
+  // Use .limit(1) instead of .maybeSingle() because multiple ticks can land in the window.
   const blockTs = new Date(payload.blockTimestamp).getTime();
   const dupCheck = await supabase
     .from("stream_ticks")
@@ -994,11 +995,11 @@ export async function recordTick(payload: OracleTickPayload) {
     .eq("session_id_onchain", tickRecord.session_id_onchain)
     .gte("block_timestamp", new Date(blockTs - 30_000).toISOString())
     .lte("block_timestamp", new Date(blockTs + 30_000).toISOString())
-    .maybeSingle();
+    .limit(1);
 
   if (dupCheck.error) throw new Error(dupCheck.error.message);
-  if (dupCheck.data)
-    return normalizeTick(dupCheck.data as Record<string, unknown>);
+  if (dupCheck.data && dupCheck.data.length > 0)
+    return normalizeTick(dupCheck.data[0] as Record<string, unknown>);
 
   const sessionQuery = await supabase
     .from("sessions")
