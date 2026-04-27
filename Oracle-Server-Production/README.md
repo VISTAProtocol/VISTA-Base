@@ -1,6 +1,6 @@
 # VISTA Oracle Server
 
-Receives attention heartbeats from the browser SDK and triggers smart contract payments on Monad testnet. Calls `VistaStream.startStream`, `tickStream`, and `endStream` on the oracle wallet's behalf.
+Receives attention heartbeats from the browser SDK and triggers smart contract payments on Base Sepolia. Calls `VistaStream.startStream`, `tickStream`, and `endStream` on the oracle wallet's behalf.
 
 ## Setup
 
@@ -25,7 +25,7 @@ npm install
 cp .env.example .env
 # Fill in:
 #   ORACLE_PRIVATE_KEY  — private key of wallet set as authorizedOracle in VistaStream
-#   BASE_RPC_URL       — Monad testnet RPC endpoint
+#   BASE_RPC_URL       — Base Sepolia RPC endpoint
 #   ORACLE_SECRET       — shared secret for SDK authentication
 ```
 

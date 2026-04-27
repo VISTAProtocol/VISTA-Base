@@ -75,7 +75,7 @@ export function formatHourLabel(hour: number) {
 }
 
 export function buildExplorerUrl(type: "tx" | "address" | "token", value: string) {
-  const base = "https://celoscan.io"
+  const base = "https://sepolia.basescan.org"
 
   if (type === "address") {
     return `${base}/address/${value}`

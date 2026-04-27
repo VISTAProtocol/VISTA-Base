@@ -11,7 +11,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { type State, WagmiProvider, useAccount } from "wagmi";
 
 import { Toaster } from "@/components/ui/sonner";
-import { celoMainnet, wagmiConfig } from "@/lib/wagmi";
+import { baseNetwork, wagmiConfig } from "@/lib/wagmi";
 
 function AccountWatcher() {
   const { address } = useAccount();
@@ -68,9 +68,9 @@ function RainbowShell({ children }: { children: React.ReactNode }) {
     <RainbowKitProvider
       appInfo={{
         appName: "VISTA Protocol",
-        learnMoreUrl: "https://celoscan.io",
+        learnMoreUrl: "https://sepolia.basescan.org",
       }}
-      initialChain={celoMainnet}
+      initialChain={baseNetwork}
       modalSize="compact"
       theme={theme}
     >

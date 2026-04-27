@@ -1,27 +1,28 @@
 import { http } from "viem";
-import { celo } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import { cookieStorage, createConfig, createStorage } from "wagmi";
 import { coinbaseWallet, injected, walletConnect } from "wagmi/connectors";
 
-import { APP_NAME, CELO_MAINNET } from "@/lib/constants";
+import { APP_NAME, BASE_MAINNET } from "@/lib/constants";
 
 const PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ||
   "vista-demo-walletconnect";
 
-const RPC_URL = process.env.NEXT_PUBLIC_BASE_RPC || CELO_MAINNET.rpcUrl;
+const RPC_URL = process.env.NEXT_PUBLIC_BASE_RPC || BASE_MAINNET.rpcUrl;
 
-export const celoMainnet = celo;
+export const baseNetwork = baseSepolia;
+export const celoMainnet = baseNetwork;
 
 export const wagmiConfig = createConfig({
-  chains: [celoMainnet],
+  chains: [baseNetwork],
   connectors: [
     injected(),
     walletConnect({ projectId: PROJECT_ID }),
     coinbaseWallet({ appName: APP_NAME }),
   ],
   transports: {
-    [celoMainnet.id]: http(RPC_URL),
+    [baseNetwork.id]: http(RPC_URL),
   },
   storage: createStorage({
     storage: cookieStorage,

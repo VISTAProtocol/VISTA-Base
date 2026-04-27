@@ -16,10 +16,10 @@ export const BASE_CHAIN_ID = parseChainId(
 
 export const monadChain = defineChain({
   id: BASE_CHAIN_ID,
-  name: "Celo",
+  name: "Base Sepolia",
   nativeCurrency: {
-    name: "Celo",
-    symbol: "CELO",
+    name: "Ether",
+    symbol: "ETH",
     decimals: 18,
   },
   rpcUrls: {
@@ -29,7 +29,7 @@ export const monadChain = defineChain({
   },
   blockExplorers: {
     default: {
-      name: "Celo Explorer",
+      name: "BaseScan",
       url: process.env.NEXT_PUBLIC_BASE_EXPLORER_URL || SDK_BASE_EXPLORER_URL,
     },
   },

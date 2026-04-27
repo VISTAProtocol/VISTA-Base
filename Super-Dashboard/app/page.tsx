@@ -30,7 +30,7 @@ import { cn } from "@/lib/utils";
 
 const tickerItems = [
   "ATTENTION MONETIZATION PROTOCOL",
-  "VERIFIED ON CELO MAINNET",
+  "VERIFIED ON BASE MAINNET",
   "USDC STREAMS EVERY 10 SECONDS",
   "OPEN SOURCE · PERMISSIONLESS",
   "ORACLE-VERIFIED ATTENTION",
@@ -658,9 +658,13 @@ export default function HomePage() {
               />
             </div>
             <div className="flex flex-col gap-0 sm:flex-row sm:items-center sm:gap-2">
-              <span className="font-semibold text-foreground">VISTA Protocol</span>
+              <span className="font-semibold text-foreground">
+                VISTA Protocol
+              </span>
               <span className="hidden opacity-40 sm:inline">·</span>
-              <span className="text-xs opacity-70">Celo · Not financial advice · Open source</span>
+              <span className="text-xs opacity-70">
+                Celo · Not financial advice · Open source
+              </span>
             </div>
           </div>
           <div className="flex items-center gap-4">
