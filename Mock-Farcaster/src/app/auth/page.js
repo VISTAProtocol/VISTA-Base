@@ -152,9 +152,19 @@ export default function AuthPage() {
     setIsSigningIn(true);
 
     try {
+      // Force switch to Base Sepolia before requesting the signature
+      if (chainId !== BASE_CHAIN_ID) {
+        if (!switchChainAsync) {
+          setErrorMessage("Wallet kamu tidak mendukung switch chain otomatis. Tolong pindah ke Base Sepolia secara manual.");
+          setIsSigningIn(false);
+          return;
+        }
+        await switchChainAsync({ chainId: BASE_CHAIN_ID });
+      }
+
       await performWalletSignIn({
         address,
-        chainId,
+        chainId: BASE_CHAIN_ID,
         targetChainId: BASE_CHAIN_ID,
         domain: window.location.host,
         uri: window.location.origin,

@@ -10,7 +10,7 @@ import {
   useSwitchChain,
   useWriteContract,
 } from "wagmi";
-import { waitForTransactionReceipt } from "wagmi/actions";
+import { readContract, waitForTransactionReceipt } from "wagmi/actions";
 
 import { MetricChartCard } from "@/components/metric-chart-card";
 import { PageHeader } from "@/components/page-header";
@@ -363,15 +363,28 @@ export default function NewCampaignPage() {
       ) {
         const amount = parseUnits(totalBudget, 6);
 
-        const approvalHash = await writeContractAsync({
+        // Check current allowance first to avoid unnecessary transactions
+        // and race conditions
+        const currentAllowance = (await readContract(wagmiConfig, {
           abi: erc20Abi,
           address: contractAddresses.mockUsdc,
-          functionName: "approve",
-          args: [contractAddresses.vistaEscrow, amount],
-          chainId: baseSepoliaNetwork.id,
-        });
+          functionName: "allowance",
+          args: [address, contractAddresses.vistaEscrow],
+        })) as bigint;
 
-        await waitForTransactionReceipt(wagmiConfig, { hash: approvalHash });
+        if (currentAllowance < amount) {
+          const approvalHash = await writeContractAsync({
+            abi: erc20Abi,
+            address: contractAddresses.mockUsdc,
+            functionName: "approve",
+            args: [contractAddresses.vistaEscrow, amount],
+            chainId: baseSepoliaNetwork.id,
+          });
+
+          await waitForTransactionReceipt(wagmiConfig, { hash: approvalHash });
+          // Wait 2 seconds for load-balanced RPC nodes to sync the new state
+          await new Promise((r) => setTimeout(r, 2000));
+        }
 
         const ratePerSecondOnchain = parseUnits(VISTA_RATE.toFixed(6), 6);
 
@@ -628,7 +641,7 @@ export default function NewCampaignPage() {
                           />
                         </svg>
                         <p className="text-sm font-medium text-destructive">
-                          Upload failed
+                          Upload faileds
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {uploadError ?? "Please try again."}

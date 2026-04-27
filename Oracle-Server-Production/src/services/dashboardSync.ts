@@ -26,54 +26,60 @@ export function syncSession(session: SessionState): void {
   }).catch(err => console.error('[syncSession] dashboard sync failed', err));
 }
 
-export function syncTick(tick: TickResult, session: SessionState): void {
+export async function syncTick(tick: TickResult, session: SessionState): Promise<void> {
   if (!DASHBOARD_API_URL) return;
-  fetch(`${DASHBOARD_API_URL}/api/ticks`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-oracle-secret': DASHBOARD_API_SECRET,
-    },
-    body: JSON.stringify({
-      sessionIdOnchain: toBytes32(session.sessionId),
-      userWallet: session.userWallet,
-      publisherWallet: session.publisherWallet,
-      userAmount: Number(tick.userAmount),
-      publisherAmount: Number(tick.publisherAmount),
-      totalAmount: Number(tick.userAmount + tick.publisherAmount),
-      secondsElapsed: tick.secondsElapsed,
-      blockTimestamp: new Date().toISOString(),
-    }),
-  }).then(async res => {
+  try {
+    const res = await fetch(`${DASHBOARD_API_URL}/api/ticks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-oracle-secret': DASHBOARD_API_SECRET,
+      },
+      body: JSON.stringify({
+        sessionIdOnchain: toBytes32(session.sessionId),
+        userWallet: session.userWallet,
+        publisherWallet: session.publisherWallet,
+        userAmount: Number(tick.userAmount),
+        publisherAmount: Number(tick.publisherAmount),
+        totalAmount: Number(tick.userAmount + tick.publisherAmount),
+        secondsElapsed: tick.secondsElapsed,
+        blockTimestamp: new Date().toISOString(),
+      }),
+    });
     if (!res.ok) {
       const body = await res.text().catch(() => '');
       console.error(`[syncTick] dashboard returned ${res.status}: ${body}`);
     }
-  }).catch(err => console.error('[syncTick] dashboard sync failed', err));
+  } catch (err) {
+    console.error('[syncTick] dashboard sync failed', err);
+  }
 }
 
-export function syncEnd(session: SessionState, txHash: string): void {
+export async function syncEnd(session: SessionState, txHash: string): Promise<void> {
   if (!DASHBOARD_API_URL) return;
-  fetch(`${DASHBOARD_API_URL}/api/receipts`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-oracle-secret': DASHBOARD_API_SECRET,
-    },
-    body: JSON.stringify({
-      tokenId: txHash || crypto.randomUUID(),
-      sessionIdOnchain: toBytes32(session.sessionId),
-      userWallet: session.userWallet,
-      publisherWallet: session.publisherWallet,
-      campaignIdOnchain: session.campaignId,
-      secondsVerified: session.validSeconds,
-      totalPaid: Number(session.totalPaid),
-      mintedAt: new Date().toISOString(),
-    }),
-  }).then(async res => {
+  try {
+    const res = await fetch(`${DASHBOARD_API_URL}/api/receipts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-oracle-secret': DASHBOARD_API_SECRET,
+      },
+      body: JSON.stringify({
+        tokenId: txHash || crypto.randomUUID(),
+        sessionIdOnchain: toBytes32(session.sessionId),
+        userWallet: session.userWallet,
+        publisherWallet: session.publisherWallet,
+        campaignIdOnchain: session.campaignId,
+        secondsVerified: session.validSeconds,
+        totalPaid: Number(session.totalPaid),
+        mintedAt: new Date().toISOString(),
+      }),
+    });
     if (!res.ok) {
       const body = await res.text().catch(() => '');
       console.error(`[syncEnd] dashboard returned ${res.status}: ${body}`);
     }
-  }).catch(err => console.error('[syncEnd] dashboard sync failed', err));
+  } catch (err) {
+    console.error('[syncEnd] dashboard sync failed', err);
+  }
 }

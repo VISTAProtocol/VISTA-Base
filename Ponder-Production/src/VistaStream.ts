@@ -29,6 +29,8 @@ ponder.on("VistaStream:StreamTick", async ({ event }) => {
     userAmount: event.args.userAmount.toString(),
     publisherAmount: event.args.publisherAmount.toString(),
     totalAmount: event.args.totalAmount.toString(),
+    // StreamTick event doesn't include secondsElapsed; oracle always ticks at 10s intervals.
+    // For watchdog partial-tick (pendingSeconds < 10), oracle sends via /api/ticks directly with the real value.
     secondsElapsed: 10,
     blockTimestamp: new Date(Number(event.block.timestamp) * 1000).toISOString(),
   });

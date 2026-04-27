@@ -1111,6 +1111,14 @@ export async function createReceipt(payload: OracleReceiptPayload) {
     0,
   );
 
+  // Fallback: if no ticks exist in DB yet (race condition or decoding failure),
+  // derive vault credit amounts from the oracle-reported usdcPaid using standard
+  // 40% user / 50% publisher protocol split.
+  const effectiveUserAmount =
+    totalUserAmount > 0 ? totalUserAmount : payload.usdcPaid * 0.40;
+  const effectivePublisherAmount =
+    totalPublisherAmount > 0 ? totalPublisherAmount : payload.usdcPaid * 0.50;
+
   const receipt: ReceiptRecord = {
     id: crypto.randomUUID(),
     token_id: payload.tokenId ?? crypto.randomUUID(),
@@ -1134,13 +1142,13 @@ export async function createReceipt(payload: OracleReceiptPayload) {
   }
 
   // Create vault credits for user
-  if (totalUserAmount > 0) {
+  if (effectiveUserAmount > 0) {
     const userCredit: VaultCreditRecord = {
       id: crypto.randomUUID(),
       wallet_address: normalizeWallet(payload.userWallet),
       session_id_onchain: payload.sessionIdOnchain,
       campaign_id_onchain: payload.campaignIdOnchain,
-      amount: totalUserAmount,
+      amount: effectiveUserAmount,
       role: 0, // user
       credited_at: payload.mintedAt,
     };
@@ -1155,13 +1163,13 @@ export async function createReceipt(payload: OracleReceiptPayload) {
   }
 
   // Create vault credits for publisher
-  if (totalPublisherAmount > 0) {
+  if (effectivePublisherAmount > 0) {
     const publisherCredit: VaultCreditRecord = {
       id: crypto.randomUUID(),
       wallet_address: normalizeWallet(payload.publisherWallet),
       session_id_onchain: payload.sessionIdOnchain,
       campaign_id_onchain: payload.campaignIdOnchain,
-      amount: totalPublisherAmount,
+      amount: effectivePublisherAmount,
       role: 1, // publisher
       credited_at: payload.mintedAt,
     };
