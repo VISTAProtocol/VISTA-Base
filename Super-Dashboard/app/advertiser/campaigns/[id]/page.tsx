@@ -32,6 +32,7 @@ import {
 } from "@/lib/contracts";
 import type { CampaignDetailData } from "@/lib/types";
 import {
+  formatDateTime,
   buildExplorerUrl,
   formatUsdc,
   truncateAddress,
