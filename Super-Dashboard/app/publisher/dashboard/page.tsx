@@ -38,7 +38,7 @@ import { MetricChartCard } from "@/components/metric-chart-card";
 import { PageHeader } from "@/components/page-header";
 import { StatCard } from "@/components/stat-card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -809,11 +809,12 @@ export default function PublisherDashboardPage() {
                     Click a platform to view its integration guide and API key.
                   </p>
                 </div>
-                <Link href="/publisher/onboarding">
-                  <Button size="sm">
-                    <Plus className="size-4 mr-1.5" />
-                    Register new platform
-                  </Button>
+                <Link
+                  href="/publisher/onboarding"
+                  className={buttonVariants({ size: "sm" })}
+                >
+                  <Plus className="size-4 mr-1.5" />
+                  Register new platform
                 </Link>
               </div>
 
@@ -834,11 +835,12 @@ export default function PublisherDashboardPage() {
                     Register your first platform to get an API key and start
                     earning.
                   </p>
-                  <Link href="/publisher/onboarding">
-                    <Button size="sm">
-                      <Plus className="size-4 mr-1.5" />
-                      Register a platform
-                    </Button>
+                  <Link
+                    href="/publisher/onboarding"
+                    className={buttonVariants({ size: "sm" })}
+                  >
+                    <Plus className="size-4 mr-1.5" />
+                    Register a platform
                   </Link>
                 </div>
               ) : (

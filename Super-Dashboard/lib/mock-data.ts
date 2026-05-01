@@ -66,6 +66,7 @@ export const mockDb: {
   campaigns: [
     {
       id: "33333333-3333-4333-8333-333333333333",
+      chain: "base",
       campaign_id_onchain: bytes32("a"),
       advertiser_wallet: demoWallets.advertiser,
       title: "Base Sepolia Gaming Sprint",
@@ -84,6 +85,7 @@ export const mockDb: {
     },
     {
       id: "44444444-4444-4444-8444-444444444444",
+      chain: "base",
       campaign_id_onchain: bytes32("b"),
       advertiser_wallet: demoWallets.advertiser,
       title: "Healthy Wallet Habits",

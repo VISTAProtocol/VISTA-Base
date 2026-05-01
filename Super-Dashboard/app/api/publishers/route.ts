@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { jsonError, jsonOk } from "@/lib/api"
+import { ApiError, jsonError, jsonOk } from "@/lib/api"
 import { createPublisher, getPublishersByWallet } from "@/lib/data"
 
 const schema = z.object({
