@@ -24,7 +24,11 @@ export async function GET(request) {
     }
 
     const data = await res.json();
-    const campaigns = Array.isArray(data) ? data : (data.campaigns ?? []);
+    const allCampaigns = Array.isArray(data) ? data : (data.campaigns ?? []);
+    
+    const currentChain = process.env.NEXT_PUBLIC_VISTA_CHAIN || "base-sepolia";
+    const campaigns = allCampaigns.filter(c => c.chain === currentChain);
+    
     return Response.json({ campaigns });
   } catch (err) {
     console.error("[API/campaigns] Failed to fetch campaigns:", err);

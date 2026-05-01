@@ -20,7 +20,12 @@ export async function GET(request) {
     }
 
     const data = await res.json();
-    return Response.json({ campaigns: data.campaigns ?? [] });
+    const allCampaigns = data.campaigns ?? [];
+    
+    const currentChain = process.env.NEXT_PUBLIC_VISTA_CHAIN || "base-sepolia";
+    const campaigns = allCampaigns.filter(c => c.chain === currentChain);
+
+    return Response.json({ campaigns });
   } catch {
     return Response.json({ campaigns: [] });
   }

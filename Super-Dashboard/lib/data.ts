@@ -64,6 +64,7 @@ function normalizeCampaign(row: Record<string, unknown>): CampaignRecord {
       row.target_max_age == null ? null : Number(row.target_max_age),
     target_locations: (row.target_locations as string[] | null) ?? null,
     active: Boolean(row.active),
+    chain: String(row.chain ?? 'base-sepolia'),
     created_at: String(row.created_at),
   };
 }
@@ -634,6 +635,22 @@ export async function createPublisher(input: {
   return data as PublisherRecord;
 }
 
+export async function getPublishersByWallet(
+  wallet: string,
+): Promise<PublisherRecord[]> {
+  const supabase = createServerSupabaseClient();
+  if (!supabase) throw new Error("Supabase client is not configured");
+
+  const { data, error } = await supabase
+    .from("publishers")
+    .select("*")
+    .eq("wallet_address", normalizeWallet(wallet))
+    .order("created_at", { ascending: false });
+
+  if (error) throw new Error(error.message);
+  return (data ?? []) as PublisherRecord[];
+}
+
 export async function createAdvertiser(input: {
   walletAddress: string;
   companyName: string;
@@ -676,6 +693,7 @@ export async function createCampaign(input: {
   targetMinAge: number | null;
   targetMaxAge: number | null;
   targetLocations: string[];
+  chain?: string;
 }) {
   const payload: CampaignRecord = {
     id: crypto.randomUUID(),
@@ -696,6 +714,7 @@ export async function createCampaign(input: {
       ? input.targetLocations
       : null,
     active: true,
+    chain: input.chain || process.env.NEXT_PUBLIC_VISTA_CHAIN || 'base-sepolia',
     created_at: nowIso(),
   };
   const supabase = createServerSupabaseClient();

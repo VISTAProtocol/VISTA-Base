@@ -55,14 +55,15 @@ var I = class {
     this.intervalId = setInterval(async () => {
       if (!(o && o()))
         try {
-          let n = t(),
-            v = await (
-              await fetch(`${this.oracleUrl}/heartbeat`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(n),
-              })
-            ).json();
+          let n = t();
+          console.log("Payload:", n);
+          let v = await (
+            await fetch(`${this.oracleUrl}/heartbeat`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(n),
+            })
+          ).json();
           e(v);
         } catch (n) {
           console.warn("[VISTA] Heartbeat failed:", n);

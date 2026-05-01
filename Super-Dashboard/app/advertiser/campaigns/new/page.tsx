@@ -10,7 +10,7 @@ import {
   useSwitchChain,
   useWriteContract,
 } from "wagmi";
-import { readContract, waitForTransactionReceipt } from "wagmi/actions";
+import { readContract, simulateContract, waitForTransactionReceipt } from "wagmi/actions";
 
 import { MetricChartCard } from "@/components/metric-chart-card";
 import { PageHeader } from "@/components/page-header";
@@ -201,6 +201,34 @@ export default function NewCampaignPage() {
     campaign: CampaignRecord;
   } | null>(null);
 
+  const [isMinting, setIsMinting] = useState(false);
+
+  async function handleMintUSDC() {
+    if (!address) {
+      toast.error("Please connect your wallet first.");
+      return;
+    }
+    
+    setIsMinting(true);
+    try {
+      const res = await fetch("/api/faucet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address, amount: 1000 }),
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to mint USDC");
+      
+      toast.success("Successfully minted 1,000 testnet USDC!");
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || "Failed to mint testnet USDC");
+    } finally {
+      setIsMinting(false);
+    }
+  }
+
   // Upload state
   const [uploadState, setUploadState] = useState<UploadState>("idle");
   const [uploadResult, setUploadResult] = useState<UploadResult | null>(null);
@@ -365,12 +393,26 @@ export default function NewCampaignPage() {
 
         // Check current allowance first to avoid unnecessary transactions
         // and race conditions
-        const currentAllowance = (await readContract(wagmiConfig, {
-          abi: erc20Abi,
-          address: contractAddresses.mockUsdc,
-          functionName: "allowance",
-          args: [address, contractAddresses.vistaEscrow],
-        })) as bigint;
+        const [currentAllowance, currentBalance] = await Promise.all([
+          readContract(wagmiConfig, {
+            abi: erc20Abi,
+            address: contractAddresses.mockUsdc,
+            functionName: "allowance",
+            args: [address, contractAddresses.vistaEscrow],
+          }) as Promise<bigint>,
+          readContract(wagmiConfig, {
+            abi: erc20Abi,
+            address: contractAddresses.mockUsdc,
+            functionName: "balanceOf",
+            args: [address],
+          }) as Promise<bigint>,
+        ]);
+
+        if (currentBalance < amount) {
+          throw new Error(
+            `Insufficient mUSDC balance. You have ${formatUsdc(Number(currentBalance) / 1e6)} but need ${formatUsdc(Number(amount) / 1e6)} mUSDC.`
+          );
+        }
 
         if (currentAllowance < amount) {
           const approvalHash = await writeContractAsync({
@@ -388,7 +430,8 @@ export default function NewCampaignPage() {
 
         const ratePerSecondOnchain = parseUnits(VISTA_RATE.toFixed(6), 6);
 
-        txHash = await writeContractAsync({
+        // Simulate first to surface the actual revert reason before writing
+        const { request: depositRequest } = await simulateContract(wagmiConfig, {
           abi: vistaEscrowAbi,
           address: contractAddresses.vistaEscrow,
           functionName: "deposit",
@@ -399,7 +442,10 @@ export default function NewCampaignPage() {
             BigInt(duration),
           ],
           chainId: baseSepoliaNetwork.id,
+          account: address,
         });
+
+        txHash = await writeContractAsync(depositRequest);
 
         await waitForTransactionReceipt(wagmiConfig, { hash: txHash });
       } else {
@@ -721,7 +767,18 @@ export default function NewCampaignPage() {
                 </div>
 
                 <div className="space-y-2 sm:col-span-2">
-                  <Label>Total budget (USDC)</Label>
+                  <div className="flex items-center justify-between">
+                    <Label>Total budget (USDC)</Label>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={(e) => { e.preventDefault(); handleMintUSDC(); }}
+                      disabled={isMinting}
+                      className="h-7 text-xs"
+                    >
+                      {isMinting ? "Minting..." : "Mint Testnet USDC"}
+                    </Button>
+                  </div>
                   <Input
                     disabled={uploadState !== "success"}
                     min="0"
